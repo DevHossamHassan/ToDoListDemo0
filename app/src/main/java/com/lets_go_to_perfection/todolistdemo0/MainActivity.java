@@ -12,23 +12,28 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String DATA_KEY = "data_key";
     ListView listTasks;
     ArrayAdapter adapter;
-    List<String> data;
+    ArrayList<String> data;
     private final static String TAG = "TodoListDemo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            data = new ArrayList<>();
+            data.add("Note 1");
+            data.add("Note 2");
+        } else {
+            data = savedInstanceState.getStringArrayList(DATA_KEY);
+        }
+
         listTasks = (ListView) findViewById(R.id.listNotes);
-        data = new ArrayList<>();
-        data.add("Note 1");
-        data.add("Note 2");
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, data);
         listTasks.setAdapter(adapter);
 
@@ -70,5 +75,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putStringArrayList(DATA_KEY, data);
+        super.onSaveInstanceState(outState);
     }
 }
